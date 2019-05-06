@@ -1,0 +1,89 @@
+# -*- mode: snippet -*-
+# name: beamer
+# key: beamer
+# --
+\documentclass[svgnames]{beamer}
+% \mode<presentation>
+\usepackage[T1]{fontenc}
+%\usepackage[math]{iwona}
+\usepackage{pgfpages}
+\usepackage{beamerthemesplit}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\lstset{
+  basicstyle=\footnotesize\ttfamily, 
+  language=Java,
+  numbers=left,               % 
+  numberstyle=\tiny,          % 
+  % stepnumber=2,               %
+  % numbersep=5pt,              % 
+  tabsize=2,                  % 
+  extendedchars=true,         %
+  breaklines=true,            % 
+  keywordstyle=\color{red},
+  % frame=b,         
+  % stringstyle=\color{white}\ttfamily, % 
+  showspaces=false,           % 
+  showtabs=false,             % 
+  % xleftmargin=17pt,
+  % framexleftmargin=17pt,
+  % framexrightmargin=5pt,
+  % framexbottommargin=4pt,
+  % backgroundcolor=\color{lightgray},
+  showstringspaces=false      
+}
+
+
+% \setbeameroption{show notes}
+
+\title{$1}
+\date{ }
+
+\usetheme{Frankfurt}
+\setbeamertemplate{footline}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{navigation symbols}{} 
+
+% \usecolortheme{seahorse}
+% \usecolortheme{lily}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+% \newtheorem{definition}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+
+\begin{document}
+
+{
+  \begin{frame}
+    \titlepage
+    
+    \begin{center}
+      \includegraphics[width=0.3\textwidth]{eg}
+    \end{center}
+    
+  \end{frame}
+}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{}
+
+\begin{frame}
+  \frametitle{}
+
+
+\end{frame}
+
+
+
+
+\end{document}

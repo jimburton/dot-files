@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+# name: article
+# key: article
+# --
+\documentclass{article}
+\usepackage[pdftex]{color,graphicx}
+\usepackage{amsmath}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fixltx2e}
+\usepackage{hyperref}
+
+\title{$1}
+\author{ }  	
+\date{ }	
+
+\pagestyle{plain}
+\begin{document}
+\maketitle
+
+$2
+
+\end{document}
+

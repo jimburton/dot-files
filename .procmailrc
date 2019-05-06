@@ -1,0 +1,17 @@
+SHELL=/bin/bash
+PATH=/usr/sbin:/usr/bin
+MAILDIR=$HOME/Mail
+DROPPRIVS=yes
+DEFAULT=$MAILDIR/inbox/
+GMAIL=$MAILDIR/gmail/
+VERBOSE=no
+# to enable logging
+LOGFILE=$MAILDIR/procmail.log
+
+#:0:
+#* ^To:.*jimburton1@gmail.com
+#${GMAIL}
+
+# Accept all the rest to your default mailbox
+:0:
+${DEFAULT}

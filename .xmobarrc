@@ -1,0 +1,47 @@
+Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
+         -- font = "xft:DejaVu Sans Mono:size=9:regular:antialias=true"	
+       , additionalFonts = []
+       , borderColor = "black"
+       , border = TopB
+       , bgColor = "black"
+       , fgColor = "grey"
+       , alpha = 255
+       , position   = Static { xpos = 0, ypos = 0, width = 1310, height = 16 }
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "."
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [ Run MultiCpu       ["--template", "Cpu: <total0>%|<total1>%|<total2>%|<total3>%"
+                               		 , "--Low"    , "50"  -- units: %
+					 , "--High"   , "85"
+					 , "--low"    , "darkorange"
+					 , "--normal" , "darkorange"
+					 , "--high"   , "darkred"
+					 ] 10
+		    , Run Battery        [ "--template" , "Batt: <acstatus>"
+		      	  		 , "--Low"      , "10"
+					 , "--High"     , "80"
+					 , "--low"      , "darkred"
+					 , "--normal"   , "darkorange"
+					 , "--high"     , "lightgreen"
+					 , "--" -- battery specific options
+					   	-- discharging status
+						, "-o" , "<left>% (<timeleft>)"
+						, "-O" , "<fc=#ee9a00>Charging</fc>"
+						, "-i" , "<fc=#98fb98>Charged</fc>"
+					] 50
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+        	    , Run Date "%a %b %_d %Y %T  " "date" 10
+		    , Run Com "wireless.sh" [] "wifi" 30
+		    , Run Com "xmobar-volume.sh" [] "vol" 10
+		    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%wifi% | %memory% | %multicpu% }\
+                    \{ %vol% | %battery% | <fc=#ee9a00>%date%</fc>"
+       }
