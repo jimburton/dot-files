@@ -9,17 +9,8 @@
       user-full-name	                     "James Burton"
       message-signature-file                 "~/.signature"
       gnus-select-method                     '(nnmaildir "mymailbox" (directory "~/Mail/"))
-      gnus-secondary-select-methods          '((nntp "news.eternal-september.org")
-					       (nntp "news.gwene.org"))
-      ;nnmail-crosspost                       nil
-      nnmail-split-methods                   'nnmail-split-fancy
+      nnmail-crosspost                       nil
       nnmail-resplit-incoming                t
-      nnmail-split-fancy                     '(|
-					       (: gnus-registry-split-fancy-with-parent)
-					       ("subject" "PEIRCE-L" "PEIRCE")
-					       (any "jimburton1@gmail.com" "gmail") 
-					       "mail.misc"    
-					       )
       send-mail-function		     'smtpmail-send-it
       message-send-mail-function	     'smtpmail-send-it
       smtpmail-smtp-server		     "smtp.brighton.ac.uk"
