@@ -50,6 +50,13 @@
          '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/"))
 
 (package-initialize)
+(exec-path-from-shell-initialize)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
 
 (setq inhibit-splash-screen        t
       make-backup-files            nil
@@ -70,7 +77,25 @@
       display-time-mode            t
       mail-signature               t
       undo-limit                   100000
-      org-log-done                 'time)
+      org-log-done                 'time
+      mu4e-maildir                 "~/Mail"   
+      mu4e-sent-folder             "/archive"
+      mu4e-drafts-folder           "/drafts"
+      mu4e-trash-folder            "/trash"
+      mu4e-refile-folder           "/archive")
+
+(add-hook 'dired-load-hook
+	  (lambda ()
+	    (load "dired-x")
+	    ;; Set dired-x global variables here.  For example:
+	    ;; (setq dired-guess-shell-gnutar "gtar")
+	    ;; (setq dired-x-hands-off-my-keys nil)
+	    ))
+(add-hook 'dired-mode-hook
+	  (lambda ()
+	    ;; Set dired-x buffer-local variables here.  For example:
+	    ;; (dired-omit-mode 1)
+	    ))
 
 (menu-bar-mode -1)
 (global-set-key [(control f1)] 'menu-bar-mode)
@@ -101,9 +126,10 @@
 (diary 0)
 (appt-activate 12)
 (global-set-key (kbd "C-c o") 'occur)
+(use-package diminish
+	     :ensure t)
 
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/emms/lisp/"))
-
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/emms/")
 (require 'emms-setup)
 (emms-standard)
 (setq emms-playlist-default-major-mode 'emms-playlist-mode)
@@ -124,25 +150,16 @@
 (require 'emms-playing-time)
 (emms-playing-time 1)
 (emms-browser-make-filter "all" 'ignore)
-(require 'emms-info)
-(require 'emms-info-metaflac)
-(add-to-list 'emms-info-functions 'emms-info-cueinfo)
-(add-to-list 'emms-info-functions 'emms-info-metaflac)
-(add-to-list 'emms-info-functions 'emms-info-ogginfo)
-(add-to-list 'emms-info-functions 'emms-info-mp3info)
+(require 'emms-info-libtag)
+(setq emms-info-functions '(emms-info-libtag))
 
+(require 'mu4e)
 (require 'font-lock)
 (require 'linum)
-;(require 'mic-paren) 
-;(paren-activate)
-;(require 'cparen)
-;(cparen-activate)
 (show-paren-mode t)
 (setq paren-priority 'close)
 (if (load "mwheel" t)
     (mwheel-install))
-;(require 'template)
-;(template-initialize)
 (autoload 'magit-status "magit" nil t)
 (global-set-key (kbd "C-x g") 'magit-status)
 (autoload 'wget "wget" "wget interface for Emacs." t)
@@ -151,12 +168,6 @@
 (parenthesis-init)
 (require 'undo-tree)
 (global-undo-tree-mode)
-
-;;; HaRe
-;(add-to-list 'load-path (expand-file-name "~/.cabal/share/x86_64-linux-ghc-8.0.2/HaRe-0.8.4.1/elisp"))
-;(require 'hare)
-;(autoload 'hare-init "hare" nil t)
-;;;
 
 (add-hook 'dired-load-hook (function
 			    (lambda () (load "dired-x"))))
@@ -208,72 +219,19 @@
 ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
-;;;haskell
-
-;; (setq auto-mode-alist
-;;       (append '(("\\.[he]s$" . haskell-mode) 
-;; 		("\\.l[he]s$" . haskell-mode)  ; for literate prgs
-;; 		("\\.hi$" . haskell-mode))    ; for interface files
-;; 	      auto-mode-alist))
-;; (autoload 'haskell-mode "haskell-mode"
-;;   "Major mode for editing Haskell scripts." t)
-;; (autoload 'literate-haskell-mode "haskell-mode"
-;;   "Major mode for editing literate Haskell scripts." t)
-;; (autoload 'ghc-init "ghc" nil t)
-;; (autoload 'ghc-debug "ghc" nil t)
 (add-hook 'haskell-mode-hook #'hindent-mode)
-
-;; (eval-after-load 'haskell-mode
-;;   '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
-
 (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
 (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
 (add-to-list 'exec-path my-cabal-path))
 (require 'haskell-interactive-mode)
 (require 'haskell-process)
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-;; (add-hook 'haskell-mode-hook '(lambda ()
-;; 				(progn
-;; 				  (setq haskell-tags-on-save 't))))
-;; (add-hook 'haskell-mode-hook 'subword-mode)
-
 (add-hook 'interactive-haskell-mode-hook 'ac-haskell-process-setup)
-;; ;(add-hook 'haskell-interactive-mode-hook 'ac-haskell-process-setup)
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'haskell-interactive-mode))
-;; ;(defun set-auto-complete-as-completion-at-point-function ()
-;; ;  (add-to-list 'completion-at-point-functions 'auto-complete))
-;; ;(add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
-;; ;(add-to-list 'ac-modes 'haskell-interactive-mode)
-;; ;(add-hook 'haskell-interactive-mode-hook 'set-auto-complete-as-completion-at-point-function)
-;; ;(add-hook 'haskell-mode-hook 'set-auto-complete-as-completion-at-point-function)
-
 (eval-after-load 'haskell-mode
   '(progn
      (parenthesis-register-keys "[(<'\"" haskell-mode-map)))
-
-;; (eval-after-load 'haskell-mode '(progn
-;;   (parenthesis-register-keys "[(<'\"" haskell-mode-map)
-;;   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
-;;   (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
-;;   (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
-;;   (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
-;;   (define-key haskell-mode-map (kbd "C-c C-d") 'ac-haskell-process-popup-doc)
-;;   (define-key haskell-cabal-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
-;;   (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
-;;   (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-;;   (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
-
-;; (require 'rainbow-delimiters)
-;; (add-hook 'haskell-mode-hook #'rainbow-delimiters-mode)
-;; (add-hook 'haskell-mode-hook (lambda ()
-;; 			       (ghc-init)
-;; 			       (hare-init)))
-
-;(require 'company)
-;(add-hook 'after-init-hook 'global-company-mode)
-;(add-to-list 'company-backends 'company-ghc)
-
 
 ;;save scripts as executable
 (add-hook 'after-save-hook
@@ -323,9 +281,8 @@
  '(mpc-mpd-music-directory "/home/jim/music")
  '(package-selected-packages
    (quote
-    (intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring ac-haskell-process)))
+    (diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring ac-haskell-process)))
  '(safe-local-variable-values (quote ((TeX-master . main))))
- '(save-place t nil (saveplace))
  '(save-place-mode t nil (saveplace))
  '(show-paren-mode t nil (paren))
  '(smtpmail-smtp-server "smtp.brighton.ac.uk")
@@ -364,8 +321,8 @@
 (load "auctex-autoloads.el" nil t t)
 (load "preview.el" nil t t)
 
-(setq ;reftex-bibpath-environment-variables '("/home/jb259/texmf/bib/bibtex/")
-      ;reftex-default-bibliography '("/home/jb259/texmf/bib/bibtex/jimburton.bib")
+(setq reftex-bibpath-environment-variables '("/home/jb259/texmf/bib/bibtex/")
+      reftex-default-bibliography '("/home/jb259/texmf/bib/bibtex/jimburton.bib")
       TeX-file-recurse                     t
       TeX-macro-private                    '("/home/jb259/texmf/")
       reftex-format-cite-function 
@@ -450,11 +407,7 @@
 
 (global-set-key (kbd "M-/") 'hippie-expand)
 
-;(require 'color-theme)
 (load-theme 'sanityinc-solarized-dark) 
-;(if (display-graphic-p) 
-;    (load-theme 'sanityinc-solarized-dark) 
-;  (load-theme 'wheatgrass))
 
 (require 'yasnippet);;
 (yas-global-mode 1)
