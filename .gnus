@@ -5,16 +5,9 @@
 (bbdb-initialize 'gnus 'message)
 (bbdb-insinuate-message)
 (gnus-registry-initialize)
-(setq user-mail-address	                     "j.burton@brighton.ac.uk"
-      user-full-name	                     "James Burton"
-      message-signature-file                 "~/.signature"
-      gnus-select-method                     '(nnmaildir "mymailbox" (directory "~/Mail/"))
+(setq gnus-select-method                     '(nnmaildir "mymailbox" (directory "~/Mail/"))
       nnmail-crosspost                       nil
       nnmail-resplit-incoming                t
-      send-mail-function		     'smtpmail-send-it
-      message-send-mail-function	     'smtpmail-send-it
-      smtpmail-smtp-server		     "smtp.brighton.ac.uk"
-      smtpmail-stream-type                   'ssl
       gnus-read-active-file                  'some
       gnus-message-archive-group             "archive"
       gnus-summary-thread-gathering-function 'gnus-gather-threads-by-subject
@@ -27,6 +20,7 @@
       gnus-buttonized-mime-types             (quote ("multipart/signed" "multipart/alternative" ))
       gnus-always-read-dribble-file          t
       gnus-novice-user                       nil
+      gnus-fetch-old-headers                 t
       bbdb-complete-name-full-completion     t
       bbdb-completion-type                   'primary-or-name
       bbdb-complete-name-allow-cycling       t
