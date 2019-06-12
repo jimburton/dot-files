@@ -85,10 +85,6 @@
       message-send-mail-function   'smtpmail-send-it
       smtpmail-smtp-server	   "smtp.brighton.ac.uk"
       smtpmail-stream-type         'ssl
-      mu4e-maildir                 "~/Mail"   
-      mu4e-sent-folder             "/archive"
-      mu4e-drafts-folder           "/drafts"
-      mu4e-trash-folder            "/trash"
       mu4e-refile-folder           "/archive"
       company-selection-wrap-around t)
 
