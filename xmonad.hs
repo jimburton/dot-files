@@ -45,6 +45,9 @@ myStartUpHook = do spawn "xsetroot -solid chocolate"
 		   spawn "dropbox start"
 		   spawn "nm-applet"
                    spawn "pulseaudio -D"
+                   -- the following command gets the pid of the xmonad process then cats the output of fd 4 to dev null
+                   -- overcoming something weird about my setup that causes xmonad to freeze when this fd gets blocked
+                   spawn "cat /proc/`ps -eaf | grep xmonad-x86 | head -n1 | awk '{print $2}'`/fd/4 > /dev/null 2>&1"
                    setWMName "LG3D"
 
 myManagementHooks :: [ManageHook]
