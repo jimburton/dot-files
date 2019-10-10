@@ -35,19 +35,12 @@
 ;;
 ;; C-x r i r inserts in the buffer the text from register r. Normally it leaves point before the text and places the mark after, but with a numeric argument (C-u) it puts point after the text and the mark before. 
 ;;
-;;;;;;;;;;;;;;;;
-;;
-;; Using abbrev-mode.
-;; put point after the text you want to expand to. e.g
-;;
-;; \bigcup\limits_{}| where | is point
-;; Type C-u <num of words before point to capture> C-x a g
-;; M-x write-abbrevs-file
-
 
 (require 'package)
-(add-to-list 'package-archives 
-         '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/"))
+(add-to-list 'package-archives
+	 '("melpa" . "http://melpa.org/packages/")
+         ;'("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
+	 )
 
 (package-initialize)
 (exec-path-from-shell-initialize)
@@ -85,9 +78,15 @@
       message-send-mail-function   'smtpmail-send-it
       smtpmail-smtp-server	   "smtp.brighton.ac.uk"
       smtpmail-stream-type         'ssl
+      mu4e-maildir                 "~/Mail"   
+      mu4e-sent-folder             "/archive"
+      mu4e-drafts-folder           "/drafts"
+      mu4e-trash-folder            "/trash"
       mu4e-refile-folder           "/archive"
-      company-selection-wrap-around t)
+      company-selection-wrap-around t
+      default-frame-alist          '((cursor-color . "#8b8989")))
 
+(require 'vlf-setup)
 (require 'doom-modeline)
 (doom-modeline-mode 1)
 
@@ -240,6 +239,9 @@
 (eval-after-load 'haskell-mode
   '(progn
      (parenthesis-register-keys "[(<'\"" haskell-mode-map)))
+;(autoload 'ghc-init "ghc" nil t)
+;(autoload 'ghc-debug "ghc" nil t)
+;(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
 
 ;;save scripts as executable
 (add-hook 'after-save-hook
@@ -289,7 +291,7 @@
  '(mpc-mpd-music-directory "/home/jim/music")
  '(package-selected-packages
    (quote
-    (all-the-icons doom-modeline bbdb company diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring ac-haskell-process)))
+    (vlf ghc all-the-icons doom-modeline bbdb company diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring ac-haskell-process)))
  '(safe-local-variable-values (quote ((TeX-master . main))))
  '(save-place-mode t nil (saveplace))
  '(show-paren-mode t nil (paren))
@@ -415,6 +417,8 @@
 
 (add-hook 'after-init-hook 'global-company-mode)
 (global-set-key (kbd "M-/") 'company-complete)
+;(with-eval-after-load 'company
+;  (add-to-list 'company-backends 'company-ghc))
 
 (load-theme 'sanityinc-solarized-dark) 
 
