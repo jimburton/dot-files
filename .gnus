@@ -26,6 +26,8 @@
       bbdb-complete-name-allow-cycling       t
       bbdb-offer-save                        1
       bbdb-use-pop-up                        nil
+      bbdb-mua-pop-up                        nil
+      bbdb-completion-display-record         nil
       bbdb-electric-p                        t
       bbdb-popup-target-lines                1)
 
@@ -44,3 +46,4 @@
 (add-hook 'gnus-summary-mode-hook 'my-alter-summary-map)
 (add-hook 'gnus-group-mode-hook   'gnus-topic-mode)
 (add-hook 'gnus-startup-hook      'bbdb-insinuate-gnus)
+
