@@ -41,7 +41,10 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
 myStartUpHook :: X ()
 myStartUpHook = do spawn "xsetroot -solid chocolate"
-	           spawn "stalonetray --icon-size=12 --kludges=force_icons_size"
+                   spawn "setxkbmap -layout us"
+                   spawn "/home/jb259/.cabal/bin/xmobar /home/jb259/.xmobarrc"
+                   spawn "stalonetray --icon-size=12 --kludges=force_icons_size"
+                   spawn "emacs --daemon"
 		   spawn "dropbox start"
 		   spawn "nm-applet"
                    spawn "pulseaudio -D"
