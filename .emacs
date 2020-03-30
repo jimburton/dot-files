@@ -38,18 +38,30 @@
 
 (require 'package)
 (add-to-list 'package-archives
-	 '("melpa" . "http://melpa.org/packages/")
+	 '("melpa" . "https://melpa.org/packages/")
          ;'("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
 	 )
 
 (package-initialize)
-(exec-path-from-shell-initialize)
+
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
 (eval-when-compile
   (require 'use-package))
+
+(use-package exec-path-from-shell
+	     :ensure t)
+(exec-path-from-shell-initialize)
+
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 (setq inhibit-splash-screen        t
       make-backup-files            nil
@@ -86,8 +98,10 @@
       company-selection-wrap-around t
       default-frame-alist          '((cursor-color . "#8b8989")))
 
-(require 'vlf-setup)
-(require 'doom-modeline)
+(use-package vlf
+  :ensure t)
+(use-package doom-modeline
+  :ensure t)
 (doom-modeline-mode 1)
 
 (add-hook 'dired-load-hook
@@ -128,37 +142,10 @@
 (line-number-mode t)
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (display-time)
-(add-hook 'diary-hook 'appt-make-list)
-(diary 0)
-(appt-activate 12)
+
 (global-set-key (kbd "C-c o") 'occur)
 (use-package diminish
 	     :ensure t)
-
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/emms/")
-(require 'emms-setup)
-(emms-standard)
-(setq emms-playlist-default-major-mode 'emms-playlist-mode)
-(when (fboundp 'emms-cache)
-  (emms-cache 1))
-(setq emms-player-list
-      '(emms-player-mpg321
-        emms-player-ogg123
-        emms-player-mplayer))
-
-(setq emms-playlist-buffer-name "*Music*")
-(setq emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find)
-(setq emms-source-file-default-directory "~/Music")
-(require 'emms-history)
-(emms-history-load)
-(require 'emms-browser)
-(require 'emms-mode-line)
-(emms-mode-line 1)
-(require 'emms-playing-time)
-(emms-playing-time 1)
-(emms-browser-make-filter "all" 'ignore)
-(require 'emms-info-libtag)
-(setq emms-info-functions '(emms-info-libtag))
 
 ;(require 'mu4e)
 (require 'font-lock)
@@ -173,8 +160,7 @@
 (require 'parenthesis)
 (add-to-list  'parenthesis-func-alist '(parenthesis-insert-dollar "$" "$" nil))
 (parenthesis-init)
-(require 'undo-tree)
-(global-undo-tree-mode)
+
 
 (add-hook 'dired-load-hook (function
 			    (lambda () (load "dired-x"))))
@@ -198,12 +184,6 @@
 (global-set-key (kbd "S-C-<up>")    'enlarge-window)
 (global-set-key (kbd "C-x m")       'browse-url-at-point)
 
-(global-auto-complete-mode t)
-(define-key ac-complete-mode-map "\C-n" 'ac-next)
-(define-key ac-complete-mode-map "\C-p" 'ac-previous)
-(setq ac-auto-start 3)
-(define-key ac-complete-mode-map "\M-/" 'ac-stop)
-
 ;;erc
 (require 'erc)
 (add-hook 'erc-text-matched-hook 'erc-beep-on-match)
@@ -219,12 +199,16 @@
       erc-warn-about-blank-lines t)
 
 ;;smex
-(require 'smex)
+(use-package smex
+  :ensure t)
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+(use-package haskell-mode
+  :ensure t)
 
 (add-hook 'haskell-mode-hook #'hindent-mode)
 (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
@@ -278,7 +262,7 @@
  '(custom-enabled-themes (quote (sanityinc-solarized-dark)))
  '(custom-safe-themes
    (quote
-    ("4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" default)))
+    ("c433c87bd4b64b8ba9890e8ed64597ea0f8eb0396f4c9a9e01bd20a04d15d358" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" default)))
  '(fci-rule-color "#073642")
  '(global-font-lock-mode t nil (font-lock))
  '(haskell-process-auto-import-loaded-modules t)
@@ -295,7 +279,7 @@
  '(safe-local-variable-values (quote ((TeX-master . main))))
  '(save-place-mode t nil (saveplace))
  '(show-paren-mode t nil (paren))
- '(smtpmail-smtp-server "smtp.brighton.ac.uk")
+ '(smtpmail-smtp-server "smtp.brighton.ac.uk" t)
  '(smtpmail-smtp-service 465)
  '(uniquify-buffer-name-style (quote forward) nil (uniquify))
  '(vc-annotate-background nil)
@@ -328,8 +312,8 @@
 ;; LaTeX, AUCTeX and math-mode
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
-(load "auctex-autoloads.el" nil t t)
-(load "preview.el" nil t t)
+;(load "auctex-autoloads.el" nil t t)
+;(load "preview.el" nil t t)
 
 (setq reftex-bibpath-environment-variables '("/home/jb259/texmf/bib/bibtex/")
       reftex-default-bibliography '("/home/jb259/texmf/bib/bibtex/jimburton.bib")
@@ -384,7 +368,8 @@
 					       TeX-run-TeX nil t
 					       :help "Run Latexmk on file")))))
 
-(require 'browse-kill-ring)
+(use-package browse-kill-ring
+  :ensure t)
 (browse-kill-ring-default-keybindings)
 
 (require 'printing)		; load printing package
@@ -415,17 +400,21 @@
          (revert-buffer-function "%b" ; Buffer Menu
 				 ("%b - Dir: " default-directory))))) ; Plain buffer
 
-(add-hook 'after-init-hook 'global-company-mode)
-(global-set-key (kbd "M-/") 'company-complete)
+;(add-hook 'after-init-hook 'global-company-mode)
+;(global-set-key (kbd "M-/") 'company-complete)
 ;(with-eval-after-load 'company
 ;  (add-to-list 'company-backends 'company-ghc))
 
-(load-theme 'sanityinc-solarized-dark) 
+(use-package solarized-theme
+  :ensure t)
+(load-theme 'solarized-light) 
 
-(require 'yasnippet);;
+(use-package yasnippet
+  :ensure t);;
 (yas-global-mode 1)
 
-(require 'neotree)
+(use-package neotree
+  :ensure t)
 (global-set-key [f8] 'neotree-toggle)
 (setq neo-smart-open t)
 (setq neo-theme 'arrow)
