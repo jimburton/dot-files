@@ -92,6 +92,7 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias emacsnw='emacs -nw'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -146,6 +147,6 @@ export EDITOR="emacsclient -t"
 export VISUAL="emacsclient -c -a emacs"
 alias emax="emacsclient -c"
 
-PATH=~/.cabal/bin:$PATH
+PATH=~/.cabal/bin:~/bin:$PATH
 export PATH
 export TERM=xterm-color
