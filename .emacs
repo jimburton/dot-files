@@ -253,7 +253,7 @@
       "dvips and gv")
      (output-dvi "xdvi")
      (output-pdf "Evince")
-     (output-html "xdg-open"))))
+     (output-html "xdg-open"))) t)
  '(ansi-color-faces-vector
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
@@ -275,8 +275,8 @@
  '(mpc-mpd-music-directory "/home/jim/music")
  '(package-selected-packages
    (quote
-    (vlf ghc all-the-icons doom-modeline bbdb company diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring ac-haskell-process)))
- '(safe-local-variable-values (quote ((TeX-master . main))))
+    (auctex yasnippet vlf ghc all-the-icons doom-modeline bbdb company diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring ac-haskell-process)))
+ '(safe-local-variable-values (quote ((TeX-master . t) (TeX-master . main))))
  '(save-place-mode t nil (saveplace))
  '(show-paren-mode t nil (paren))
  '(smtpmail-smtp-server "smtp.brighton.ac.uk" t)
@@ -311,7 +311,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LaTeX, AUCTeX and math-mode
 ;;;;;;;;;;;;;;;;;;;;;;;;
-
+(use-package auctex
+  :defer t
+  :ensure t)
 ;(load "auctex-autoloads.el" nil t t)
 ;(load "preview.el" nil t t)
 
@@ -337,6 +339,11 @@
 					     ("\\\\frame\\b" 2))
       TeX-PDF-mode                         t
       TeX-output-view-style                '(("." "." "evince %o ")))
+(setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
+(setq TeX-view-program-selection '((output-pdf "Evince")))
+(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+(setq TeX-source-correlate-start-server t)
+
 ;; So that RefTeX also recognizes \addbibresource. Note that you
 ;; can't use $HOME in path for \addbibresource but that "~"
 ;; works.
