@@ -207,25 +207,39 @@
 ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
+(use-package flycheck
+  :ensure t
+  :defer 2
+  :diminish
+  :init (global-flycheck-mode)
+  :custom
+  (flycheck-display-errors-delay .3))
+(use-package flycheck-haskell
+  :ensure t)
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (haskell-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+(use-package lsp-ui
+  :ensure t)
+(use-package lsp-haskell
+  :ensure t)
 (use-package haskell-mode
   :ensure t)
+(add-hook 'haskell-mode-hook #'lsp)
+(add-hook 'haskell-literate-mode-hook #'lsp)
 
-(add-hook 'haskell-mode-hook #'hindent-mode)
 (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
 (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
 (add-to-list 'exec-path my-cabal-path))
-(require 'haskell-interactive-mode)
-(require 'haskell-process)
-(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-(add-hook 'interactive-haskell-mode-hook 'ac-haskell-process-setup)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'haskell-interactive-mode))
 (eval-after-load 'haskell-mode
   '(progn
-     (parenthesis-register-keys "[(<'\"" haskell-mode-map)))
-;(autoload 'ghc-init "ghc" nil t)
-;(autoload 'ghc-debug "ghc" nil t)
-;(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+     (parenthesis-register-keys "{[(<'\"" haskell-mode-map)))
 
 ;;save scripts as executable
 (add-hook 'after-save-hook
@@ -275,7 +289,7 @@
  '(mpc-mpd-music-directory "/home/jim/music")
  '(package-selected-packages
    (quote
-    (auctex yasnippet vlf ghc all-the-icons doom-modeline bbdb company diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring ac-haskell-process)))
+    (flymake-hlint flymake-haskell-multi flycheck-haskell flycheck lsp-haskell lsp-ui lsp-mode auctex yasnippet vlf ghc all-the-icons doom-modeline bbdb company diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring)))
  '(safe-local-variable-values (quote ((TeX-master . t) (TeX-master . main))))
  '(save-place-mode t nil (saveplace))
  '(show-paren-mode t nil (paren))
