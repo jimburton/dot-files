@@ -119,7 +119,8 @@
 
 (menu-bar-mode -1)
 (global-set-key [(control f1)] 'menu-bar-mode)
-(defun toggle-mode-line () "toggles the modeline on and off"
+(defun toggle-mode-line ()
+  "Toggle the modeline on and off."
   (interactive)
   (setq mode-line-format
 	(if (equal mode-line-format nil)
@@ -207,6 +208,9 @@
 ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
+(use-package which-key
+  :ensure t)
+(which-key-mode)
 (use-package flycheck
   :ensure t
   :defer 2
@@ -218,21 +222,51 @@
   :ensure t)
 (use-package lsp-mode
   :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-c l")
+  ;;(setq lsp-keymap-prefix "C-c l")
+  :config
+  ;;(define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+  ;;(require 'lsp-clients)
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
          (haskell-mode . lsp)
-         ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
+(setq lsp-keymap-prefix "s-l")
 (use-package lsp-ui
   :ensure t)
+;(define-key lsp-command-keymap "\C-c l i" 'lsp-ui-imenu)
+(global-set-key (kbd "C-x i") 'lsp-ui-imenu)
+(global-set-key (kbd "C-x d") 'lsp-ui-doc-show)
+(global-set-key (kbd "C-x q") 'lsp-ui-doc-hide)
+(global-set-key (kbd "C-x .") 'completion-at-point)
+;(add-hook 'julia-mode-hook
+;	  '(lambda ()
+;	     (local-set-key (kbd "C-d") 'julia-repl-send-line)
+;	     (local-set-key (kbd "C-c C-c") 'julia-repl-send-buffer)))
+;(setq lsp-ui-doc-enable t)
+
 (use-package lsp-haskell
   :ensure t)
 (use-package haskell-mode
   :ensure t)
 (add-hook 'haskell-mode-hook #'lsp)
 (add-hook 'haskell-literate-mode-hook #'lsp)
+(lsp-modeline-code-actions-mode)
+(setq lsp-modeline-diagnostics-enable t)
+(setq lsp-modeline-code-actions-mode t)
+(setq lsp-headerline-breadcrumb-mode t)
+(setq company-minimum-prefix-length 1
+      company-idle-delay 0.0)
+
+
+(use-package company-ghci
+  :ensure t)
+(push 'company-ghci company-backends)
+(add-hook 'haskell-mode-hook 'company-mode)
+;;; To get completions in the REPL
+(add-hook 'haskell-interactive-mode-hook 'company-mode)
+;(use-package company-mode
+;  :ensure t)
+;(add-hook 'after-init-hook 'global-company-mode)
 
 (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
 (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
@@ -243,7 +277,8 @@
 
 ;;save scripts as executable
 (add-hook 'after-save-hook
-          '(lambda ()
+          '(lambda
+	     ()
              (progn
                (and (save-excursion
                       (save-restriction
@@ -289,7 +324,7 @@
  '(mpc-mpd-music-directory "/home/jim/music")
  '(package-selected-packages
    (quote
-    (flymake-hlint flymake-haskell-multi flycheck-haskell flycheck lsp-haskell lsp-ui lsp-mode auctex yasnippet vlf ghc all-the-icons doom-modeline bbdb company diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring)))
+    (which-keyg company-ghci company-mode flymake-hlint flymake-haskell-multi flycheck-haskell flycheck lsp-haskell lsp-ui lsp-mode auctex yasnippet vlf ghc all-the-icons doom-modeline bbdb company diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring)))
  '(safe-local-variable-values (quote ((TeX-master . t) (TeX-master . main))))
  '(save-place-mode t nil (saveplace))
  '(show-paren-mode t nil (paren))
