@@ -221,29 +221,12 @@
 (use-package flycheck-haskell
   :ensure t)
 (use-package lsp-mode
-  :init
-  ;;(setq lsp-keymap-prefix "C-c l")
-  :config
-  ;;(define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-  ;;(require 'lsp-clients)
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (haskell-mode . lsp)
+  :hook ((haskell-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 (setq lsp-keymap-prefix "s-l")
 (use-package lsp-ui
   :ensure t)
-;(define-key lsp-command-keymap "\C-c l i" 'lsp-ui-imenu)
-(global-set-key (kbd "C-x i") 'lsp-ui-imenu)
-(global-set-key (kbd "C-x d") 'lsp-ui-doc-show)
-(global-set-key (kbd "C-x q") 'lsp-ui-doc-hide)
-(global-set-key (kbd "C-x .") 'completion-at-point)
-;(add-hook 'julia-mode-hook
-;	  '(lambda ()
-;	     (local-set-key (kbd "C-d") 'julia-repl-send-line)
-;	     (local-set-key (kbd "C-c C-c") 'julia-repl-send-buffer)))
-;(setq lsp-ui-doc-enable t)
-
 (use-package lsp-haskell
   :ensure t)
 (use-package haskell-mode
@@ -253,9 +236,12 @@
 (lsp-modeline-code-actions-mode)
 (setq lsp-modeline-diagnostics-enable t)
 (setq lsp-modeline-code-actions-mode t)
-(setq lsp-headerline-breadcrumb-mode t)
 (setq company-minimum-prefix-length 1
       company-idle-delay 0.0)
+(global-set-key (kbd "s-l i") 'lsp-ui-imenu)
+(global-set-key (kbd "s-l d") 'lsp-ui-doc-show)
+(global-set-key (kbd "s-l q") 'lsp-ui-doc-hide)
+(global-set-key (kbd "s-l .") 'completion-at-point)
 
 
 (use-package company-ghci
@@ -264,9 +250,6 @@
 (add-hook 'haskell-mode-hook 'company-mode)
 ;;; To get completions in the REPL
 (add-hook 'haskell-interactive-mode-hook 'company-mode)
-;(use-package company-mode
-;  :ensure t)
-;(add-hook 'after-init-hook 'global-company-mode)
 
 (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
 (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
