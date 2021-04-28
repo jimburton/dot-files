@@ -1,0 +1,50 @@
+[general]
+accounts = work, gmail
+maxsyncaccounts = 2
+socktimeout = 60
+
+[Account work]
+localrepository = local
+remoterepository = exchange
+autorefresh = 5
+quick = 10
+
+[Repository local]
+type = Maildir
+localfolders = ~/Mail
+
+[Repository exchange]
+type = IMAP
+ssl = no
+remotehost = localhost
+remoteport = 1143
+remoteuser = university\XXXXX
+remotepass = XXXXXXXX
+maxconnections = 2
+holdconnectionopen = yes
+keepalive = 60
+folderfilter = lambda foldername: foldername in ['INBOX', 'Sent']
+createfolders = False
+readonly = True
+
+[Account gmail]
+localrepository = gmail-local
+remoterepository = gmail-remote
+
+[Repository gmail-local]
+type = Maildir
+localfolders = ~/Mail/gmail
+
+[Repository gmail-remote]
+type = Gmail
+remoteuser = XXXXXXXXX@gmail.com
+remotepass = XXXXXXXX
+nametrans = lambda foldername: re.sub ('^\[gmail\]', 'bak',
+                               re.sub ('sent_mail', 'sent',
+                               re.sub ('starred', 'flagged',
+                               re.sub (' ', '_', foldername.lower()))))
+folderfilter = lambda foldername: foldername not in ['[Gmail]/All Mail']
+# Necessary as of OfflineIMAP 6.5.4
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+# Necessary to work around https://github.com/OfflineIMAP/offlineimap/issues/573 (versions 7.0.12, 7.2.1)
+ssl_version = tls1_2
