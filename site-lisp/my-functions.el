@@ -160,14 +160,17 @@ program wc."
 	pairs))
 
 (defun jb/org-to-beamer ()
-  "Run pandoc on an org file to produce beamer slides.  
-Requires pandoc and LaTeX distribution." 
+  "Run pandoc on an org file to produce beamer slides.
+Requires pandoc and LaTeX distribution."
   (interactive)
   (let* ((input (buffer-file-name))
 	 (base (file-name-base (buffer-file-name)))
 	 (dir (file-name-directory (buffer-file-name)))
-	 (output (format "%s%s.pdf" dir base)))
-  (shell-command (format "pandoc -t beamer %s -o %s" input output))))
+	 (output (format "%s%s.pdf" dir base))
+	 (cmd (format "pandoc -t beamer %s -o %s" input output)))
+    (progn
+      (message (format "Generating beamer slides: %s" cmd))
+      (shell-command cmd))))
 
 (provide 'my-functions)
 ;;; my-functions.el ends here
