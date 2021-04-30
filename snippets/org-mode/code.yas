@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: org-code
+# key: code
+# --
+
+#+BEGIN_SRC haskell
+$0
+#+END_SRC

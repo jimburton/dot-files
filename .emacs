@@ -88,7 +88,7 @@
       message-signature-file       "~/.signature"
       send-mail-function	   'smtpmail-send-it
       message-send-mail-function   'smtpmail-send-it
-      smtpmail-smtp-server	   "smtp.brighton.ac.uk"
+      smtpmail-smtp-server	   "localhost"
       smtpmail-stream-type         'ssl
       mu4e-maildir                 "~/Mail"   
       mu4e-sent-folder             "/archive"
@@ -148,7 +148,6 @@
 (use-package diminish
 	     :ensure t)
 
-;(require 'mu4e)
 (require 'font-lock)
 (require 'linum)
 (show-paren-mode t)
@@ -176,7 +175,24 @@
 			      (auto-fill-mode 1)
 			      (parenthesis-register-keys "[(<$" org-mode-map))))
 
+;; org presentations
 (defalias 'list-buffers 'ibuffer)
+(use-package org-present
+  :ensure t)
+(eval-after-load "org-present"
+  '(progn
+     (add-hook 'org-present-mode-hook
+               (lambda ()
+                 (org-present-big)
+                 (org-display-inline-images)
+                 (org-present-hide-cursor)
+                 (org-present-read-only)))
+     (add-hook 'org-present-mode-quit-hook
+               (lambda ()
+                 (org-present-small)
+                 (org-remove-inline-images)
+                 (org-present-show-cursor)
+                 (org-present-read-write)))))
 
 ;;resizing windows
 (global-set-key (kbd "S-C-<left>")  'shrink-window-horizontally)
@@ -236,10 +252,13 @@
 (add-hook 'haskell-mode-hook #'lsp)
 (add-hook 'haskell-literate-mode-hook #'lsp)
 (lsp-modeline-code-actions-mode)
-(setq lsp-modeline-diagnostics-enable t)
-(setq lsp-modeline-code-actions-mode t)
-(setq company-minimum-prefix-length 1
-      company-idle-delay 0.0)
+(setq lsp-modeline-diagnostics-enable t
+      lsp-modeline-code-actions-mode t
+      lsp-headerline-breadcrumb-enable nil
+      company-minimum-prefix-length 1
+      company-idle-delay 0.0
+      lsp-ui-sideline-show-code-actions nil
+      lsp-ui-doc-show-with-cursor nil)
 (define-key lsp-command-map (kbd "i") 'lsp-ui-imenu)
 (define-key lsp-command-map (kbd "d") 'lsp-ui-doc-show)
 (define-key lsp-command-map (kbd "q") 'lsp-ui-doc-hide)
@@ -292,11 +311,13 @@
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
    (vector "#839496" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#002b36"))
+ '(column-number-mode t)
  '(company-ghc-show-info t)
  '(custom-enabled-themes (quote (sanityinc-solarized-dark)))
  '(custom-safe-themes
    (quote
     ("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" "c433c87bd4b64b8ba9890e8ed64597ea0f8eb0396f4c9a9e01bd20a04d15d358" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" default)))
+ '(display-time-mode t)
  '(fci-rule-color "#073642")
  '(flycheck-display-errors-delay 0.3)
  '(global-font-lock-mode t nil (font-lock))
@@ -310,12 +331,11 @@
  '(mpc-mpd-music-directory "/home/jim/music")
  '(package-selected-packages
    (quote
-    (dash dash-functional which-keyg company-ghci company-mode flymake-hlint flymake-haskell-multi flycheck-haskell flycheck lsp-haskell lsp-ui lsp-mode auctex yasnippet vlf ghc all-the-icons doom-modeline bbdb company diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring)))
+    (org-present mu4e-alert mu4e-marker-icons mu4e-conversation excorporate dash dash-functional which-keyg company-ghci company-mode flymake-hlint flymake-haskell-multi flycheck-haskell flycheck lsp-haskell lsp-ui lsp-mode auctex yasnippet vlf ghc all-the-icons doom-modeline bbdb company diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring)))
  '(safe-local-variable-values (quote ((TeX-master . t) (TeX-master . main))))
  '(save-place-mode t nil (saveplace))
  '(show-paren-mode t nil (paren))
- '(smtpmail-smtp-server "smtp.brighton.ac.uk" t)
- '(smtpmail-smtp-service 465)
+ '(tool-bar-mode nil)
  '(uniquify-buffer-name-style (quote forward) nil (uniquify))
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
@@ -468,10 +488,42 @@
 (require 'my-functions)
 (global-set-key (kbd "C-c C-f")       'jb/fetchmail-wake-or-start)
 
+;;;;;;;;;;;;;;;;;;;;;;
+;; MAIL
+;;;;;;;;;;;;;;;;;;;;;;
+
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+(require 'mu4e)
+
+;; use mu4e for e-mail in emacs
+(setq mail-user-agent 'mu4e-user-agent
+      mu4e-drafts-folder "/[work].Drafts"
+      mu4e-sent-folder   "/[work].Sent Mail"
+      mu4e-trash-folder  "/[work].Trash"
+      mu4e-sent-messages-behavior 'delete
+      mu4e-get-mail-command "offlineimap -o"
+      mu4e-update-interval 300)
+
+(use-package mu4e-marker-icons
+  :ensure t
+  :init (mu4e-marker-icons-mode 1))
+(use-package mu4e-alert
+  :ensure t
+  :init (mu4e-marker-icons-mode 1))
+(add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+
+(require 'smtpmail)
+(setq message-send-mail-function 'smtpmail-send-it
+   smtpmail-default-smtp-server "localhost"
+   smtpmail-smtp-server "localhost"
+   smtpmail-stream-type 'plain
+   smtpmail-smtp-service 1025)
+
 ;(require 'my-site-specific)
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 120 :width normal)))))

@@ -1,7 +1,13 @@
+;;; package --- Little helper functions.
+;;;
+;;; Commentary:
+;;;
 ;;; Allow undo of scrolling
 ;;;
 ;;; Code taken from "Writing GNU Emacs Extensions" by Bob Glickstein,
 ;;; (O'Reilly & Assoc., 1997)
+
+;;; Code:
 
 (defvar unscroll-point (make-marker)
   "Cursor position for next call to \\[unscroll].")
@@ -25,6 +31,7 @@
 
 
 (defun unscroll-maybe-remember ()
+  "Maybe remember where we started scrolling."
   (if (not (get last-command 'unscrollable))
       (progn
 	(set-marker unscroll-point (point))
@@ -54,10 +61,10 @@
 (require 'term)
 (defun visit-ansi-term ()
   "If the current buffer is:
-     1) a running ansi-term named *ansi-term*, rename it.
-     2) a stopped ansi-term, kill it and create a new one.
-     3) a non ansi-term, go to an already running ansi-term
-        or start a new one while killing a defunt one"
+1) a running `ansi-term' named *ansi-term*, rename it.
+2) a stopped `ansi-term', kill it and create a new one.
+3) a non `ansi-term', go to an already running `ansi-term'
+or start a new one while killing a defunct one."
   (interactive)
   (let ((is-term (string= "term-mode" major-mode))
         (is-running (term-check-proc (buffer-name)))
@@ -93,8 +100,8 @@
   "Normal hook for functions to run after finding a \"root\" file.")
 
 (defun find-file-root ()
-  "*Open a file as the root user.
-   Prepends `find-file-root-prefix' to the selected file name so that it
+  "Open a file as the root user.
+Prepends `find-file-root-prefix' to the selected file name so that it
    maybe accessed via the corresponding tramp method."
 
   (interactive)
@@ -123,16 +130,16 @@
 
 ;;wc
 (defun jb/wc-latex ()
-  "Count words in a buffer disregarding LaTeX macro names and
-environments etc. Counts the words in the region if the mark is
-active, or in the whole buffer if not. Requires external programs
+  "Count words in a buffer disregarding LaTeX macro names and environments etc.
+Counts the words in the region if the mark is
+active, or in the whole buffer if not.  Requires external programs
 wc and untex."
   (interactive) 
   (jb/shell-command-on-region-or-buffer "untex -a -e-o - | wc -w"))
 
 (defun jb/wc ()
   "Count words in a buffer. Counts the words in the region if the
-mark is active, or in the whole buffer if not. Requires external
+mark is active, or in the whole buffer if not.  Requires external
 program wc."
   (interactive) 
   (jb/shell-command-on-region-or-buffer "wc -w"))
@@ -147,8 +154,19 @@ program wc."
 (global-set-key (kbd "C-#") 'jb/wc)
 
 (defun jb/define-keys (kmap pairs)
-  "Define a series of keybindings in KMAP. PAIRS is an list of (KEYBINDING . COMMAND) pairs."
-  (mapc '(lambda (pair)
+  "Define a series of keybindings in KMAP.  PAIRS is an list of (KEYBINDING .  COMMAND) pairs."
+  (mapc #'(lambda (pair)
 	     (define-key kmap (car pair) (cdr pair))) pairs))
 
+(defun jb/org-to-beamer ()
+  "Run pandoc on an org file to produce beamer slides.  
+Requires pandoc and LaTeX distribution." 
+  (interactive)
+  (let* ((dir (file-name-directory (buffer-file-name)))
+	 (input (buffer-file-name))
+	 (base (file-name-base (buffer-file-name)))
+	 (output (format "%s%s.pdf" dir base)))
+      (file-name-base (buffer-file-name))
+  (shell-command (format "pandoc -t beamer %s -o %s" input output))))
 (provide 'my-functions)
+;;; my-functions.el ends here
