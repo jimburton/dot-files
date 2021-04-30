@@ -90,11 +90,6 @@
       message-send-mail-function   'smtpmail-send-it
       smtpmail-smtp-server	   "localhost"
       smtpmail-stream-type         'ssl
-      mu4e-maildir                 "~/Mail"   
-      mu4e-sent-folder             "/archive"
-      mu4e-drafts-folder           "/drafts"
-      mu4e-trash-folder            "/trash"
-      mu4e-refile-folder           "/archive"
       company-selection-wrap-around t
       default-frame-alist          '((cursor-color . "#8b8989")))
 
@@ -171,7 +166,8 @@
 (global-set-key "\C-cb" 'org-iswitchb)
 (add-hook 'org-mode-hook '(lambda ()
 			    (progn
-			      (setq fill-column 95)
+			      (setq fill-column 80
+				    org-src-fontify-natively t)
 			      (auto-fill-mode 1)
 			      (parenthesis-register-keys "[(<$" org-mode-map))))
 
@@ -497,9 +493,10 @@
 
 ;; use mu4e for e-mail in emacs
 (setq mail-user-agent 'mu4e-user-agent
-      mu4e-drafts-folder "/[work].Drafts"
-      mu4e-sent-folder   "/[work].Sent Mail"
-      mu4e-trash-folder  "/[work].Trash"
+      mu4e-sent-folder   "/Sent"   
+      mu4e-drafts-folder "/Drafts" 
+      mu4e-trash-folder  "/Trash"  
+      mu4e-refile-folder "/archive"
       mu4e-sent-messages-behavior 'delete
       mu4e-get-mail-command "offlineimap -o"
       mu4e-update-interval 300)
