@@ -134,19 +134,19 @@ Prepends `find-file-root-prefix' to the selected file name so that it
 Counts the words in the region if the mark is
 active, or in the whole buffer if not.  Requires external programs
 wc and untex."
-  (interactive) 
+  (interactive)
   (jb/shell-command-on-region-or-buffer "untex -a -e-o - | wc -w"))
 
 (defun jb/wc ()
   "Count words in a buffer. Counts the words in the region if the
 mark is active, or in the whole buffer if not.  Requires external
 program wc."
-  (interactive) 
+  (interactive)
   (jb/shell-command-on-region-or-buffer "wc -w"))
   
 (defun jb/shell-command-on-region-or-buffer (cmd)
   "Run the command CMD on region if mark is active or whole buffer if not."
-  (interactive) 
+  (interactive)
   (let* ((begin (if mark-active (region-beginning) (point-min)))
 	(end (if mark-active (region-end) (point-max))))
     (shell-command-on-region begin end cmd)))
@@ -156,17 +156,18 @@ program wc."
 (defun jb/define-keys (kmap pairs)
   "Define a series of keybindings in KMAP.  PAIRS is an list of (KEYBINDING .  COMMAND) pairs."
   (mapc #'(lambda (pair)
-	     (define-key kmap (car pair) (cdr pair))) pairs))
+	    (define-key kmap (car pair) (cdr pair)))
+	pairs))
 
 (defun jb/org-to-beamer ()
   "Run pandoc on an org file to produce beamer slides.  
 Requires pandoc and LaTeX distribution." 
   (interactive)
-  (let* ((dir (file-name-directory (buffer-file-name)))
-	 (input (buffer-file-name))
+  (let* ((input (buffer-file-name))
 	 (base (file-name-base (buffer-file-name)))
+	 (dir (file-name-directory (buffer-file-name)))
 	 (output (format "%s%s.pdf" dir base)))
-      (file-name-base (buffer-file-name))
   (shell-command (format "pandoc -t beamer %s -o %s" input output))))
+
 (provide 'my-functions)
 ;;; my-functions.el ends here
