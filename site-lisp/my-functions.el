@@ -159,6 +159,21 @@ program wc."
 	    (define-key kmap (car pair) (cdr pair)))
 	pairs))
 
+(defun jb/org-to-beamer-evince ()
+  "Run pandoc on an org file to produce beamer slides.
+Requires pandoc and LaTeX distribution."
+  (interactive)
+  (let* ((input (buffer-file-name))
+	 (base (file-name-base (buffer-file-name)))
+	 (dir (file-name-directory (buffer-file-name)))
+	 (output (format "%s%s.pdf" dir base))
+	 (pandoc-cmd (format "pandoc -t beamer %s -o %s" input output))
+	 (view-cmd (format "evince %s &" output)))
+    (progn
+      (message (format "Generating beamer slides: %s" pandoc-cmd))
+      (shell-command pandoc-cmd)
+      (shell-command view-cmd))))
+
 (defun jb/org-to-beamer ()
   "Run pandoc on an org file to produce beamer slides.
 Requires pandoc and LaTeX distribution."
@@ -167,10 +182,10 @@ Requires pandoc and LaTeX distribution."
 	 (base (file-name-base (buffer-file-name)))
 	 (dir (file-name-directory (buffer-file-name)))
 	 (output (format "%s%s.pdf" dir base))
-	 (cmd (format "pandoc -t beamer %s -o %s" input output)))
+	 (pandoc-cmd (format "pandoc --pdf-engine=xelatex -V theme:Frankfurt -V mainfont=\"DejaVu Sans\" -V sansfont=\"DejaVu Sans Mono\" -t beamer %s -o %s" input output)))
     (progn
-      (message (format "Generating beamer slides: %s" cmd))
-      (shell-command cmd))))
+      (message (format "Generating beamer slides: %s" pandoc-cmd))
+      (shell-command pandoc-cmd))))
 
 (provide 'my-functions)
 ;;; my-functions.el ends here
