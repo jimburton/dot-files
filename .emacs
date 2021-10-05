@@ -559,7 +559,11 @@
 ;(add-to-list 'mu4e-bookmarks
 ;  '( :name  "lilleys"
 ;     :query "list:lilleyslist.googlegroups.com"
-;     :key   ?l))
+					;     :key   ?l))
+(setq mu4e-maildir-shortcuts
+  '( (:maildir "/INBOX"     :key  ?i)
+     (:maildir "/Archive"   :key  ?a)
+     (:maildir "/Sent"      :key  ?s)))
 (use-package mu4e-column-faces
   :after mu4e
   :config (mu4e-column-faces-mode))
