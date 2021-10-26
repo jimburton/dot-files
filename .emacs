@@ -69,7 +69,7 @@
       bookmark-save-flag           1
       fill-column                  95
       x-select-enable-clipboard    t
-      browse-url-browser-function 'eww-browse-url
+      browse-url-browser-function  'browse-url-firefox
       european-calendar-style      t
       appt-audible                 t
       appt-display-format          'window
@@ -547,7 +547,9 @@
       mu4e-sent-messages-behavior 'delete
       mu4e-get-mail-command "offlineimap -o"
       mu4e-update-interval 300
-      mu4e-compose-signature-auto-include nil)
+      mu4e-compose-signature-auto-include nil
+      mu4e-view-use-gnus t
+      gnus-blocked-images "http")
 
 (use-package mu4e-marker-icons
   :ensure t
