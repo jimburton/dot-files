@@ -566,6 +566,13 @@
   '( (:maildir "/INBOX"     :key  ?i)
      (:maildir "/Archive"   :key  ?a)
      (:maildir "/Sent"      :key  ?s)))
+
+(add-to-list 'mu4e-bookmarks
+	     '( :name  "Flagged messages"
+		       :query "flag:flagged"
+		       :key   ?f)
+	     t)
+
 (use-package mu4e-column-faces
   :after mu4e
   :config (mu4e-column-faces-mode))
