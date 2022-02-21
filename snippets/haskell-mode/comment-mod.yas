@@ -1,0 +1,13 @@
+# Author: James Burton <j.burton@brighton.ac.uk>
+# name: Module header comment
+# key: comm
+# --
+-- |
+-- Module      : $1
+-- Description : $2
+-- Maintainer  : j.burton@brighton.ac.uk
+-- Stability   : experimental
+-- Portability : POSIX
+-- 
+-- $3
+$0
