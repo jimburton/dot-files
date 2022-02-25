@@ -141,6 +141,11 @@ else
     start_agent;
 fi
 
+#ssh-add &>/dev/null || eval `ssh-agent` &>/dev/null  # start ssh-agent if not present
+#[ $? -eq 0 ] && {                                     # ssh-agent has started
+#ssh-add ~/.ssh/id_rsa &>/dev/null        # Load key 1
+#}
+
 #alias wifi="sudo wicd-client"
 export ALTERNATE_EDITOR=""
 export EDITOR="emacsclient -t"
@@ -150,3 +155,4 @@ alias emax="emacsclient -c"
 PATH=~/.cabal/bin:~/bin:$PATH
 export PATH
 export TERM=xterm-color
+[ -f "/home/jb259/.ghcup/env" ] && source "/home/jb259/.ghcup/env" # ghcup-env
