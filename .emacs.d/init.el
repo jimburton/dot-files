@@ -89,6 +89,7 @@
       mail-signature               t
       undo-limit                   100000
       org-log-done                 'time
+      org-image-actual-width       nil
       user-mail-address	           "j.burton@brighton.ac.uk"
       user-full-name	           "James Burton"
       message-signature-file       "~/.signature"
@@ -99,7 +100,15 @@
       company-selection-wrap-around t
       default-frame-alist          '((cursor-color . "#8b8989")))
 
-(use-package vlf
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+	      ("s-p" . projectile-command-map)
+	      ("C-c p" . projectile-command-map)))
+(use-package
+  vlf
   :ensure t)
 (use-package doom-modeline
   :ensure t)
@@ -370,7 +379,7 @@
     ("#dc322f" "#cb4b16" "#b58900" "#5b7300" "#b3c34d" "#0061a8" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (chess solarized-theme mu4e-column-faces mu4e-overview mu4e-alert mu4e-marker-icons aria2 epresent org-present excorporate dash dash-functional which-keyg company-ghci company-mode flymake-hlint flymake-haskell-multi flycheck-haskell flycheck lsp-haskell lsp-ui lsp-mode auctex yasnippet vlf ghc all-the-icons doom-modeline bbdb company diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring)))
+    (flx-ido projectile latex-preview-pane pdf-tools chess solarized-theme mu4e-column-faces mu4e-overview mu4e-alert mu4e-marker-icons aria2 epresent org-present excorporate dash dash-functional which-keyg company-ghci company-mode flymake-hlint flymake-haskell-multi flycheck-haskell flycheck lsp-haskell lsp-ui lsp-mode auctex yasnippet vlf ghc all-the-icons doom-modeline bbdb company diminish use-package exec-path-from-shell bongo intero neotree haskell-mode which-key undo-tree smex rainbow-delimiters pandoc-mode markdown-mode magit hindent csv-mode company-ghc color-theme-sanityinc-solarized browse-kill-ring)))
  '(pos-tip-background-color "#eee8d5")
  '(pos-tip-foreground-color "#586e75")
  '(safe-local-variable-values (quote ((TeX-master . t) (TeX-master . main))))
@@ -482,6 +491,14 @@
 					       TeX-run-TeX nil t
 					       :help "Run Latexmk on file")))))
 
+;; Use pdf-tools to open PDF files
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      TeX-source-correlate-start-server t)
+
+;; Update PDF buffers after successful LaTeX runs
+(add-hook 'TeX-after-compilation-finished-functions
+	  #'TeX-revert-document-buffer)
+
 (use-package browse-kill-ring
   :ensure t)
 (browse-kill-ring-default-keybindings)
@@ -577,9 +594,10 @@
 ;     :query "list:lilleyslist.googlegroups.com"
 					;     :key   ?l))
 (setq mu4e-maildir-shortcuts
-  '( (:maildir "/INBOX"     :key  ?i)
-     (:maildir "/Archive"   :key  ?a)
-     (:maildir "/Sent"      :key  ?s)))
+  '( (:maildir "/INBOX"   :key  ?i)
+     (:maildir "/Sent"    :key  ?s)
+     (:maildir "/Drafts"  :key  ?d)
+     (:maildir "/Archive" :key  ?a)))
 (require 'mu4e-icalendar)
 (mu4e-icalendar-setup)
 (add-to-list 'mu4e-bookmarks
