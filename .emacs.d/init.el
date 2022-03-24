@@ -55,20 +55,6 @@
 (eval-when-compile
   (require 'use-package))
 
-(use-package exec-path-from-shell
-	     :ensure t)
-(exec-path-from-shell-initialize)
-(exec-path-from-shell-copy-env "SSH_AGENT_PID")
-(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
-
-(use-package markdown-mode
-  :ensure t
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown"))
-
 (setq inhibit-splash-screen        t
       make-backup-files            nil
       use-dialog-box               nil
@@ -99,20 +85,6 @@
       smtpmail-stream-type         'ssl
       company-selection-wrap-around t
       default-frame-alist          '((cursor-color . "#8b8989")))
-
-(use-package projectile
-  :ensure t
-  :init
-  (projectile-mode +1)
-  :bind (:map projectile-mode-map
-	      ("s-p" . projectile-command-map)
-	      ("C-c p" . projectile-command-map)))
-(use-package
-  vlf
-  :ensure t)
-(use-package doom-modeline
-  :ensure t)
-(doom-modeline-mode 1)
 
 (add-hook 'dired-load-hook
 	  (lambda ()
@@ -156,59 +128,9 @@
 (display-time)
 
 (global-set-key (kbd "C-c o") 'occur)
-(use-package diminish
-	     :ensure t)
-
-(require 'font-lock)
-(require 'linum)
-(show-paren-mode t)
-(setq paren-priority 'close)
-(if (load "mwheel" t)
-    (mwheel-install))
-(autoload 'magit-status "magit" nil t)
-(global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "C-c g") 'magit-file-dispatch)
-(autoload 'wget "wget" "wget interface for Emacs." t)
-(require 'parenthesis)
-(add-to-list  'parenthesis-func-alist '(parenthesis-insert-dollar "$" "$" nil))
-(parenthesis-init)
-
 
 (add-hook 'dired-load-hook (function
 			    (lambda () (load "dired-x"))))
-
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-(add-hook 'org-mode-hook '(lambda ()
-			    (progn
-			      (setq fill-column 80
-				    org-src-fontify-natively t)
-			      (auto-fill-mode 1)
-			      (parenthesis-register-keys "[(<$" org-mode-map))))
-
-;; org presentations
-(defalias 'list-buffers 'ibuffer)
-(use-package org-present
-  :ensure t)
-(use-package epresent
-  :ensure t)
-
-(eval-after-load "org-present"
-  '(progn
-     (add-hook 'org-present-mode-hook
-               (lambda ()
-                 (org-present-big)
-                 (org-display-inline-images)
-                 (org-present-hide-cursor)
-                 (org-present-read-only)))
-     (add-hook 'org-present-mode-quit-hook
-               (lambda ()
-                 (org-present-small)
-                 (org-remove-inline-images)
-                 (org-present-show-cursor)
-                 (org-present-read-write)))))
 
 ;;resizing windows
 (global-set-key (kbd "S-C-<left>")  'shrink-window-horizontally)
@@ -216,85 +138,6 @@
 (global-set-key (kbd "S-C-<down>")  'shrink-window)
 (global-set-key (kbd "S-C-<up>")    'enlarge-window)
 (global-set-key (kbd "C-x m")       'browse-url-at-point)
-
-;;erc
-(require 'erc)
-(add-hook 'erc-text-matched-hook 'erc-beep-on-match)
-(setq erc-modules                '(autojoin button fill irccontrols 
-					    match netsplit noncommands 
-					    pcomplete readonly ring 
-					    scrolltobottom services 
-					    smiley stamp track)
-      erc-nick                   "titusg"
-      erc-prompt-for-channel-key nil
-      erc-send-whitespace-lines  nil
-      erc-user-full-name         "Titus Groan"
-      erc-warn-about-blank-lines t)
-
-;;smex
-(use-package smex
-  :ensure t)
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
-(require 'dash)
-
-(use-package which-key
-  :ensure t)
-(which-key-mode)
-(use-package flycheck
-  :ensure t
-  :defer 2
-  :diminish
-  :init (global-flycheck-mode)
-  :custom
-  (flycheck-display-errors-delay .3))
-(use-package flycheck-haskell
-  :ensure t)
-(use-package lsp-mode
-  :hook ((haskell-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
-(setq lsp-keymap-prefix "C-c C-l")
-(use-package lsp-ui
-  :ensure t)
-(use-package lsp-haskell
-  :ensure t)
-(use-package haskell-mode
-  :ensure t)
-(add-hook 'haskell-mode-hook #'lsp)
-(add-hook 'haskell-literate-mode-hook #'lsp)
-(lsp-modeline-code-actions-mode)
-(setq lsp-modeline-diagnostics-enable t
-      lsp-modeline-code-actions-mode t
-      lsp-headerline-breadcrumb-enable nil
-      company-minimum-prefix-length 1
-      company-idle-delay 0.0
-      lsp-ui-sideline-show-code-actions t
-      lsp-ui-doc-show-with-cursor t
-      lsp-haskell-process-path-hie "haskell-language-server-wrapper")
-(define-key lsp-command-map (kbd "i") 'lsp-ui-imenu)
-(define-key lsp-command-map (kbd "d") 'lsp-ui-doc-show)
-(define-key lsp-command-map (kbd "q") 'lsp-ui-doc-hide)
-(define-key lsp-command-map (kbd ".") 'completion-at-point)
-
-
-(use-package company-ghci
-  :ensure t)
-(push 'company-ghci company-backends)
-(add-hook 'haskell-mode-hook 'company-mode)
-;;; To get completions in the REPL
-(add-hook 'haskell-interactive-mode-hook 'company-mode)
-
-(let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
-(setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
-(add-to-list 'exec-path my-cabal-path))
-(eval-after-load 'haskell-mode
-  '(progn
-     (parenthesis-register-keys "{[(<'\"" haskell-mode-map)))
 
 ;;save scripts as executable
 (add-hook 'after-save-hook
@@ -424,85 +267,6 @@
  '(xterm-color-names-bright
    ["#fdf6e3" "#cb4b16" "#93a1a1" "#839496" "#657b83" "#6c71c4" "#586e75" "#002b36"]))
 
-;;;;;;;;;;;;;;;;;;;;;;;;
-;; LaTeX, AUCTeX and math-mode
-;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package auctex
-  :defer t
-  :ensure t)
-;(load "auctex-autoloads.el" nil t t)
-;(load "preview.el" nil t t)
-
-(setq reftex-bibpath-environment-variables '("/home/jb259/texmf/bib/bibtex/")
-      reftex-default-bibliography '("/home/jb259/texmf/bib/bibtex/jimburton.bib")
-      TeX-file-recurse                     t
-      TeX-macro-private                    '("/home/jb259/texmf/")
-      reftex-format-cite-function 
-      '(lambda (key fmt)
-	 (let ((cite (replace-regexp-in-string "%l" key fmt)))
-	   (if (or (= ?~ (string-to-char fmt))
-		   (member (preceding-char) '(?\ ?\t ?\n ?~)))
-	       cite
-	     (concat "~" cite))))
-      TeX-auto-save                        t
-      TeX-parse-self                       t
-      reftex-plug-into-AUCTeX              t
-      LaTeX-math-list                      '(("v" "vdash")
-					     ("V" "vDash")
-					     ("e" "eta"))
-      TeX-outline-extra                    '(("[ \t]*\\\\\\(bib\\)?item\\b" 7)
-					     ("\\\\bibliography\\b" 2)
-					     ("\\\\frame\\b" 2))
-      TeX-PDF-mode                         t
-      TeX-output-view-style                '(("." "." "evince %o ")))
-(setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
-(setq TeX-view-program-selection '((output-pdf "Evince")))
-(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-(setq TeX-source-correlate-start-server t)
-
-;; So that RefTeX also recognizes \addbibresource. Note that you
-;; can't use $HOME in path for \addbibresource but that "~"
-;; works.
-(setq reftex-bibliography-commands '("bibliography" "nobibliography" "addbibresource"))
-
-(setq reftex-external-file-finders
-'(("tex" . "/usr/bin/kpsewhich -format=.tex %f")
-  ("bib" . "/usr/bin/kpsewhich -format=.bib %f")))
-
-(setq-default TeX-master nil)
-;; minor modes for LaTex
-(add-hook 'LaTeX-mode-hook '(lambda () 
-			      (progn
-				(turn-on-reftex)
-				(setq TeX-PDF-mode t)
-				(LaTeX-math-mode  1)
-				(flyspell-mode    1)
-				(auto-fill-mode   1)
-				(setq fill-column 95)
-				(parenthesis-register-keys "{([$" LaTeX-mode-map)
-				(define-key LaTeX-mode-map (kbd "C-#") 'jb/wc-latex)
-				(outline-minor-mode t)
-				(setq latex-mode-map LaTeX-mode-map)
-				(add-to-list 'TeX-command-list 
-					     '("images" "utils.py svg2pdf"
-					       TeX-run-command nil t))
-				(add-to-list 'TeX-command-list 
-					     '("make" "latexmk -pdf %s"
-					       TeX-run-TeX nil t
-					       :help "Run Latexmk on file")))))
-
-;; Use pdf-tools to open PDF files
-(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-      TeX-source-correlate-start-server t)
-
-;; Update PDF buffers after successful LaTeX runs
-(add-hook 'TeX-after-compilation-finished-functions
-	  #'TeX-revert-document-buffer)
-
-(use-package browse-kill-ring
-  :ensure t)
-(browse-kill-ring-default-keybindings)
-
 (require 'printing)		; load printing package
 (setq pr-path-alist
       '((unix      "." "~/bin" ghostview mpage PATH)
@@ -531,92 +295,21 @@
          (revert-buffer-function "%b" ; Buffer Menu
 				 ("%b - Dir: " default-directory))))) ; Plain buffer
 
-;(add-hook 'after-init-hook 'global-company-mode)
-;(global-set-key (kbd "M-/") 'company-complete)
-;(with-eval-after-load 'company
-;  (add-to-list 'company-backends 'company-ghc))
-
-(use-package solarized-theme
-  :ensure t)
-(load-theme 'solarized-light) 
-
-(use-package yasnippet
-  :ensure t);;
-(yas-global-mode 1)
-
-(use-package undo-tree
-  :ensure t);;
-(global-undo-tree-mode)
-
-(use-package neotree
-  :ensure t)
-(global-set-key [f8] 'neotree-toggle)
-(setq neo-smart-open t)
-(setq neo-theme 'arrow)
-
-(use-package rainbow-delimiters
-  :ensure t)
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-(add-hook 'haskell-mode-hook #'rainbow-delimiters-mode)
-
 (require 'my-functions)
 (global-set-key (kbd "C-c C-f")       'jb/fetchmail-wake-or-start)
 
-;;;;;;;;;;;;;;;;;;;;;;
-;; MAIL
-;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Longer domain-specific config is in separate init files
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
-(require 'mu4e)
-
-;; use mu4e for e-mail in emacs
-(setq mail-user-agent 'mu4e-user-agent
-      mu4e-sent-folder   "/Sent"   
-      mu4e-drafts-folder "/Drafts" 
-      mu4e-trash-folder  "/Trash"  
-      mu4e-refile-folder "/Archive"
-      mu4e-sent-messages-behavior 'delete
-      mu4e-get-mail-command "offlineimap -o"
-      mu4e-update-interval 300
-      mu4e-compose-signature-auto-include nil
-      mu4e-view-use-gnus t
-      gnus-blocked-images "http")
-
-(use-package mu4e-marker-icons
-  :ensure t
-  :init (mu4e-marker-icons-mode 1))
-(use-package mu4e-alert
-  :ensure t
-  :init (mu4e-marker-icons-mode 1))
-(add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
-;(add-to-list 'mu4e-bookmarks
-;  '( :name  "lilleys"
-;     :query "list:lilleyslist.googlegroups.com"
-					;     :key   ?l))
-(setq mu4e-maildir-shortcuts
-  '( (:maildir "/INBOX"   :key  ?i)
-     (:maildir "/Sent"    :key  ?s)
-     (:maildir "/Drafts"  :key  ?d)
-     (:maildir "/Archive" :key  ?a)))
-(require 'mu4e-icalendar)
-(mu4e-icalendar-setup)
-(add-to-list 'mu4e-bookmarks
-	     '( :name  "Flagged messages"
-		       :query "flag:flagged"
-		       :key   ?f)
-	     t)
-
-(use-package mu4e-column-faces
-  :after mu4e
-  :config (mu4e-column-faces-mode))
-(require 'smtpmail)
-(setq message-send-mail-function 'smtpmail-send-it
-   smtpmail-default-smtp-server "localhost"
-   smtpmail-smtp-server "localhost"
-   smtpmail-stream-type 'plain
-   smtpmail-smtp-service 1025)
+(require 'init-packages)
+;(require 'init-mail)
+(require 'init-latex)
+(require 'init-haskell)
 
 ;(require 'my-site-specific)
+
+
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
