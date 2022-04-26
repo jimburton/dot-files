@@ -66,9 +66,9 @@
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
-(add-hook 'org-mode-hook '(lambda ()
+(add-h.ook 'org-mode-hook '(lambda ()
 			    (progn
-			      (setq fill-column 80
+			      (setq fill-column 70
 				    org-src-fontify-natively t)
 			      (auto-fill-mode 1)
 			      (parenthesis-register-keys "[(<$" org-mode-map))))
