@@ -1,4 +1,4 @@
-PATH=~/.cabal/bin:/opt/ghc/bin:~/bin:$PATH
+PATH=~/.ghcup/bin:~/.local/bin:~/.cabal/bin:/opt/ghc/bin:~/bin:$PATH
 
 
 alias trackoff="xinput set-prop 12 \"Device Enabled\" 0"
