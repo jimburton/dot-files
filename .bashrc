@@ -152,7 +152,9 @@ export EDITOR="emacsclient -t"
 export VISUAL="emacsclient -c -a emacs"
 alias emax="emacsclient -c"
 
-PATH=~/.cabal/bin:~/bin:$PATH
+PATH=~/.ghcup/bin:~/.local/bin:~/.cabal/bin:~/bin:$PATH
 export PATH
 export TERM=xterm-color
-[ -f "/home/jb259/.ghcup/env" ] && source "/home/jb259/.ghcup/env" # ghcup-env
+#[ -f "/home/jb259/.ghcup/env" ] && source "/home/jb259/.ghcup/env" # ghcup-env
+
+[ -f "/home/james/.ghcup/env" ] && source "/home/james/.ghcup/env" # ghcup-env
