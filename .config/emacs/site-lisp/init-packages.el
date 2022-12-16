@@ -66,13 +66,12 @@
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
-(add-hook 'org-mode-hook '(lambda ()
-			    (progn
-			      (setq fill-column 70
-				    org-src-fontify-natively t)
-			      (auto-fill-mode 1)
-			      (parenthesis-register-keys "[(<$" org-mode-map))))
-
+(add-hook 'org-mode-hook #'(lambda ()
+			     (progn
+			       (setq fill-column 80
+				     org-src-fontify-natively t)
+			       (auto-fill-mode 1)
+			       (parenthesis-register-keys "[(<$" org-mode-map))))
 ;; org presentations
 (defalias 'list-buffers 'ibuffer)
 (use-package org-present
@@ -141,10 +140,5 @@
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
-
-(use-package dash
-  :ensure t)
-(use-package dash-functional
-  :ensure t)
 
 (provide 'init-packages)
