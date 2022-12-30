@@ -33,6 +33,8 @@
 ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
+(use-package dash
+  :ensure t)
 (require 'dash)
 
 (use-package which-key
