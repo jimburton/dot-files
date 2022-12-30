@@ -1,15 +1,16 @@
+;;; package -- Mail config
+;;; Commentary:
 ;;;;;;;;;;;;;;;;;;;;;;
-;; MAIL
-;;;;;;;;;;;;;;;;;;;;;;
+;;; Code:
 
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 (require 'mu4e)
 
 ;; use mu4e for e-mail in emacs
 (setq mail-user-agent 'mu4e-user-agent
-      mu4e-sent-folder   "/Sent"   
-      mu4e-drafts-folder "/Drafts" 
-      mu4e-trash-folder  "/Trash"  
+      mu4e-sent-folder   "/Sent"
+      mu4e-drafts-folder "/Drafts"
+      mu4e-trash-folder  "/Trash"
       mu4e-refile-folder "/Archive"
       mu4e-sent-messages-behavior 'delete
       mu4e-get-mail-command "offlineimap -o"
