@@ -3,10 +3,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
 (require 'mu4e)
 
-;; use mu4e for e-mail in emacs
+;; ;; use mu4e for e-mail in emacs
 (setq mail-user-agent 'mu4e-user-agent
       mu4e-sent-folder   "/Sent"
       mu4e-drafts-folder "/Drafts"
@@ -54,3 +54,4 @@
    smtpmail-smtp-service 1025)
 
 (provide 'init-mail)
+;;; init-mail.el ends here.

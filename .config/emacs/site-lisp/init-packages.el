@@ -1,6 +1,13 @@
+;;; package -- init-packages.el.
+;;; Commentary:
+;;; set up the packages I'm using from ELPA/MELPA
+;;; Code:
 (use-package solarized-theme
   :ensure t)
-(load-theme 'solarized-light) 
+(load-theme 'solarized-light)
+
+(use-package magit
+  :ensure t)
 
 (use-package yasnippet
   :ensure t);;
@@ -35,7 +42,6 @@
 
 (use-package dash
   :ensure t)
-(require 'dash)
 
 (use-package which-key
   :ensure t)
@@ -144,3 +150,4 @@
   :init (setq markdown-command "multimarkdown"))
 
 (provide 'init-packages)
+;;; init-packages.el ends here.

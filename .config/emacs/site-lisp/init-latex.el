@@ -1,6 +1,7 @@
-;;;;;;;;;;;;;;;;;;;;;;;;
+;;; package --- init-latex.el
+;;; Commentary:
 ;; LaTeX, AUCTeX and math-mode
-;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Code:
 (use-package auctex
   :defer t
   :ensure t)
@@ -74,3 +75,4 @@
 	  #'TeX-revert-document-buffer)
 
 (provide 'init-latex)
+;;; init-latex.el ends here.

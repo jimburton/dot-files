@@ -1,3 +1,7 @@
+;;; package --- init-haskell.el
+;;; Commentary:
+;;; Set up haskell packages.
+;;; Code:
 (use-package flycheck-haskell
   :ensure t)
 (use-package lsp-mode
@@ -43,3 +47,4 @@
      (parenthesis-register-keys "{[(<'\"" haskell-mode-map)))
 
 (provide 'init-haskell)
+;;; init-haskell.el ends here.
