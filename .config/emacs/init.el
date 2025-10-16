@@ -200,6 +200,7 @@
 ;(require 'init-mail)
 (require 'init-latex)
 (require 'init-haskell)
+(require 'init-rust)
 
 ;(require 'my-site-specific)
 
