@@ -183,11 +183,28 @@
 			      (auto-fill-mode 1)
 			      (parenthesis-register-keys "[(<'\"" php-mode-map))))
 
+(add-hook 'markdown-mode-hook 'turn-on-auto-fill)
+
 (setq frame-title-format
       '(buffer-file-name "%b - %f" ; File buffer
         (dired-directory dired-directory ; Dired buffer
          (revert-buffer-function "%b" ; Buffer Menu
 				 ("%b - Dir: " default-directory))))) ; Plain buffer
+
+(defun split-and-follow-horizontally ()
+  "Split the window horizontally and switch focus to the new window."
+  (interactive)
+  (split-window-vertically)
+  (other-window 1))
+
+(defun split-and-follow-vertically ()
+  "Split the window vertically and switch focus to the new window."
+  (interactive)
+  (split-window-right)
+  (other-window 1))
+
+(global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
+(global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 
 (require 'my-functions)
 (global-set-key (kbd "C-c C-f")       'jb/fetchmail-wake-or-start)
@@ -201,6 +218,7 @@
 (require 'init-latex)
 (require 'init-haskell)
 (require 'init-rust)
+;(require 'init-ts)
 
 ;(require 'my-site-specific)
 

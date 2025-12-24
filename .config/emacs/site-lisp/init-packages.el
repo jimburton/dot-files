@@ -2,6 +2,11 @@
 ;;; Commentary:
 ;;; set up the packages I'm using from ELPA/MELPA
 ;;; Code:
+(use-package tree-sitter
+  :ensure t)
+(use-package tree-sitter-langs
+  :ensure t)
+
 (use-package solarized-theme
   :ensure t)
 (load-theme 'solarized-light)
@@ -16,6 +21,7 @@
 (use-package undo-tree
   :ensure t);;
 (global-undo-tree-mode)
+(setq undo-tree-auto-save-history nil)
 
 (use-package neotree
   :ensure t)
@@ -41,6 +47,11 @@
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 (use-package dash
+  :ensure t)
+
+(use-package elpy
+  :commands elpy-enable
+  :init (elpy-enable)
   :ensure t)
 
 (use-package which-key
@@ -148,6 +159,8 @@
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
+
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 (provide 'init-packages)
 ;;; init-packages.el ends here.
