@@ -173,7 +173,7 @@ layout {
         // - CSS-like notation: "rgb(255, 127, 0)", rgba(), hsl() and a few others.
 
         // Color of the ring on the active monitor.
-        active-color "#7fc8ff"
+        active-color "#7fc8ff" 
 
         // Color of the ring on inactive monitors.
         //
@@ -274,7 +274,7 @@ layout {
 // See the binds section below for more spawn examples.
 
 // listen for HDMI devices and mirror display when one is connected
-spawn-at-startup "sh" "-c" "while true; do ~/bin/niri-hdmi-mirror.sh; sleep 3; done"
+spawn-at-startup "sh" "-c" "~/bin/niri-hdmi-mirror.sh"
 
 // This line starts waybar, a commonly used bar for Wayland compositors.
 //spawn-at-startup "waybar"
@@ -307,13 +307,19 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
 // Animation settings.
 // The wiki explains how to configure individual animations:
-// https://niri-wm.github.io/niri/Configuration:-Animations
+// https://niri-wm.github.io/niri/Configuration:Animations
+
 animations {
     // Uncomment to turn off all animations.
     // off
 
     // Slow down all animations by this factor. Values below 1 speed them up instead.
     // slowdown 3.0
+
+    // Controls the bounce strength when hitting view edges
+    horizontal-view-movement {
+        spring stiffness=1000 damping-ratio=0.9 epsilon=0.0001
+    }
 }
 
 // Place the wallpaper into the overview backdrop
@@ -329,6 +335,24 @@ layer-rule {
 window-rule {
     match app-id="wl-mirror"
     open-fullscreen true
+}
+
+window-rule {
+    match app-id="waycal"
+    
+    // Position the window near top-right
+    default-column-width { fixed 300; }
+    open-floating true
+}
+
+window-rule {
+    match app-id="gsimplecal"
+
+    open-floating true
+    
+    // Forces the window to open at top-right
+    // Adjust x/y pixel offsets relative to your monitor resolution
+    default-floating-position x=40 y=20 relative-to="top-right"
 }
 
 // Work around WezTerm's initial configure bug
@@ -391,7 +415,6 @@ binds {
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+T hotkey-overlay-title="Open a Terminal" { spawn "gnome-terminal"; }
-    //Mod+D { spawn "~/bin/fuzzel-run.sh"; }
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "sh" "-c" "PATH=\"$HOME/bin:$PATH\" fuzzel"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
@@ -406,6 +429,10 @@ binds {
     F1 allow-when-locked=true { 
         spawn "pactl" "set-sink-mute" "@DEFAULT_SINK@" "toggle"
     }
+
+    // Laptop screen brightness keys
+    F5 allow-when-locked=true   { spawn "brightnessctl" "set" "+5%"; }
+    F4 allow-when-locked=true { spawn "brightnessctl" "set" "5%-"; }
 
     F9 allow-when-locked=true { 
         spawn "pactl" "set-source-mute" "@DEFAULT_SOURCE@" "toggle"
@@ -436,18 +463,20 @@ binds {
 
     Mod+Q repeat=false { close-window; }
 
-    Mod+Left  { focus-column-left; }
+    Mod+Left  { spawn-sh "bash niri-move.sh l"; }
     Mod+Down  { focus-window-down; }
     Mod+Up    { focus-window-up; }
-    Mod+Right { focus-column-right; }
-    Mod+H     { focus-column-left; }
+    Mod+Shift+Down  { focus-workspace-down; }
+    Mod+Shift+Up    { focus-workspace-up; }
+    Mod+Right { spawn-sh "bash niri-move.sh r"; }
+    Mod+H     { spawn-sh "bash niri-move.sh l"; }
     Mod+J     { focus-window-down; }
     Mod+K     { focus-window-up; }
-    Mod+L     { focus-column-right; }
+    Mod+L     { spawn-sh "bash niri-move.sh r"; }
 
     Mod+Ctrl+Left  { move-column-left; }
-    Mod+Ctrl+Down  { move-window-down; }
-    Mod+Ctrl+Up    { move-window-up; }
+    Mod+Ctrl+Down  { move-window-down-or-to-workspace-down; }
+    Mod+Ctrl+Up    { move-window-up-or-to-workspace-up; }
     Mod+Ctrl+Right { move-column-right; }
     Mod+Ctrl+H     { move-column-left; }
     Mod+Ctrl+J     { move-window-down; }
@@ -466,14 +495,14 @@ binds {
     Mod+Ctrl+Home { move-column-to-first; }
     Mod+Ctrl+End  { move-column-to-last; }
 
-    Mod+Shift+Left  { focus-monitor-left; }
-    Mod+Shift+Down  { focus-monitor-down; }
-    Mod+Shift+Up    { focus-monitor-up; }
-    Mod+Shift+Right { focus-monitor-right; }
-    Mod+Shift+H     { focus-monitor-left; }
-    Mod+Shift+J     { focus-monitor-down; }
-    Mod+Shift+K     { focus-monitor-up; }
-    Mod+Shift+L     { focus-monitor-right; }
+    //Mod+Shift+Left  { focus-monitor-left; }
+    //Mod+Shift+Down  { focus-monitor-down; }
+    //Mod+Shift+Up    { focus-monitor-up; }
+    //Mod+Shift+Right { focus-monitor-right; }
+    //Mod+Shift+H     { focus-monitor-left; }
+    //Mod+Shift+J     { focus-monitor-down; }
+    //Mod+Shift+K     { focus-monitor-up; }
+    //Mod+Shift+L     { focus-monitor-right; }
 
     Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
     Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }

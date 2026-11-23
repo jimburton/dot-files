@@ -54,7 +54,6 @@
 				(flyspell-mode    1)
 				(auto-fill-mode   1)
 				(setq fill-column 95)
-				(parenthesis-register-keys "{([$" LaTeX-mode-map)
 				(define-key LaTeX-mode-map (kbd "C-#") 'jb/wc-latex)
 				(outline-minor-mode t)
 				(setq latex-mode-map LaTeX-mode-map)

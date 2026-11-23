@@ -89,8 +89,7 @@
 			     (progn
 			       (setq fill-column 80
 				     org-src-fontify-natively t)
-			       (auto-fill-mode 1)
-			       (parenthesis-register-keys "[(<$" org-mode-map))))
+			       (auto-fill-mode 1))))
 ;; org presentations
 (defalias 'list-buffers 'ibuffer)
 (use-package org-present

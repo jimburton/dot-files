@@ -180,8 +180,7 @@
 (add-hook 'php-mode-hook '(lambda ()
 			    (progn
 			      (setq fill-column 95)
-			      (auto-fill-mode 1)
-			      (parenthesis-register-keys "[(<'\"" php-mode-map))))
+			      (auto-fill-mode 1))))
 
 (add-hook 'markdown-mode-hook 'turn-on-auto-fill)
 

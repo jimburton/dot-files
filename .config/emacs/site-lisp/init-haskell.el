@@ -42,9 +42,6 @@
 (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
 (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
 (add-to-list 'exec-path my-cabal-path))
-(eval-after-load 'haskell-mode
-  '(progn
-     (parenthesis-register-keys "{[(<'\"" haskell-mode-map)))
 
 (provide 'init-haskell)
 ;;; init-haskell.el ends here.
