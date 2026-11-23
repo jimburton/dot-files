@@ -1,12 +1,7 @@
-;;; package -- init-packages.el.
+;;; package -- init-packages.el.  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; set up the packages I'm using from ELPA/MELPA
 ;;; Code:
-(use-package tree-sitter
-  :ensure t)
-(use-package tree-sitter-langs
-  :ensure t)
-
 (use-package solarized-theme
   :ensure t)
 (load-theme 'solarized-light)
@@ -59,11 +54,21 @@
 (which-key-mode)
 (use-package flycheck
   :ensure t
-  :defer 2
   :diminish
-  :init (global-flycheck-mode)
+  :hook ((prog-mode . flycheck-mode)
+         (lisp-interaction-mode . (lambda ()
+                                    (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))))
+  :config
+  (advice-add 'flycheck-may-enable-checker :around
+              (lambda (orig-fn checker &rest args)
+                (if (and (eq checker 'emacs-lisp)
+                         (derived-mode-p 'lisp-interaction-mode)
+                         (not (bound-and-true-p org-src-mode))
+                         (not (string-prefix-p " " (buffer-name))))
+                    t
+                  (apply orig-fn checker args))))
   :custom
-  (flycheck-display-errors-delay .3))
+  (flycheck-display-errors-delay 0.3))
 
 ;;erc
 (require 'erc)
@@ -90,6 +95,7 @@
 			       (setq fill-column 80
 				     org-src-fontify-natively t)
 			       (auto-fill-mode 1))))
+
 ;; org presentations
 (defalias 'list-buffers 'ibuffer)
 (use-package org-present
@@ -118,7 +124,7 @@
 	     :ensure t)
 
 (require 'font-lock)
-(require 'linum)
+;(require 'linum)
 (show-paren-mode t)
 (setq paren-priority 'close)
 (if (load "mwheel" t)
@@ -127,9 +133,10 @@
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-c g") 'magit-file-dispatch)
 (autoload 'wget "wget" "wget interface for Emacs." t)
-(require 'parenthesis)
-(add-to-list  'parenthesis-func-alist '(parenthesis-insert-dollar "$" "$" nil))
-(parenthesis-init)
+;;(require 'parenthesis)
+;;(add-to-list  'parenthesis-func-alist '(parenthesis-insert-dollar "$" "$" nil))
+;;(parenthesis-init)
+(electric-pair-mode 1)
 
 (use-package projectile
   :ensure t
@@ -141,6 +148,10 @@
 (use-package
   vlf
   :ensure t)
+
+(use-package nerd-icons
+  :ensure t)
+
 (use-package doom-modeline
   :ensure t)
 (doom-modeline-mode 1)
@@ -160,6 +171,9 @@
   :init (setq markdown-command "multimarkdown"))
 
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+
+;(add-to-list 'auto-mode-alist '("\\\\.tsx\\'" . tsx-ts-mode))
+;(add-to-list 'auto-mode-alist '("\\\\.jsx?\\'" . tsx-ts-mode))
 
 (provide 'init-packages)
 ;;; init-packages.el ends here.

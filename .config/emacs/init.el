@@ -1,7 +1,11 @@
-;;; package --- init file
+;;; package --- init file  -*- lexical-binding: t; -*-
 ;;; Commentary:
-;;; My location for external packages.
-;(set-face-attribute 'default nil :height 100)
+
+;; Set default font (height is in 1/10 pt, so 120 = 12pt)
+(set-face-attribute 'default nil
+                    :family "Ubuntu Sans Mono"
+                    :height 120
+                    :weight 'normal)
 
 ;;;;;;;;;;;;;;;;
 ;; put these commands in a cheat-sheet
@@ -43,7 +47,13 @@
 ;;
 
 ;;; Code:
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp"))
+; Disable terminal colour querying that causes trailing backstrokes
+(setq xterm-query-timeout nil)
+(setq term-file-aliases '(("xterm-256color" . "xterm")))
+(setq inhibit-xterm-resize t)
+(setq xterm-extra-capabilities nil)
+
+(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
 
 (require 'package)
 (add-to-list 'package-archives
@@ -158,8 +168,8 @@
                     (shell-command (concat "chmod u+x " buffer-file-name))
                     (message (concat "Saved as script: " buffer-file-name))))))
 
-(setq custom-file "~/.emacs.d/emacs-custom.el")
-(load custom-file)
+(setq custom-file (locate-user-emacs-file "emacs-custom.el"))
+(load custom-file 'noerror)
 
 (require 'printing)		; load printing package
 (setq pr-path-alist
@@ -217,7 +227,7 @@
 (require 'init-latex)
 (require 'init-haskell)
 (require 'init-rust)
-;(require 'init-ts)
+(require 'init-treesitter)
 
 ;(require 'my-site-specific)
 

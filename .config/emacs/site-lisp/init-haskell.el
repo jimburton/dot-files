@@ -1,4 +1,4 @@
-;;; package --- init-haskell.el
+;;; package --- init-haskell.el  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Set up haskell packages.
 ;;; Code:

@@ -1,4 +1,4 @@
-;;; package --- init-latex.el
+;;; package --- init-latex.el  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;; LaTeX, AUCTeX and math-mode
 ;;; Code:
@@ -13,12 +13,12 @@
       TeX-file-recurse                     t
       TeX-macro-private                    '("/home/jb259/texmf/")
       reftex-format-cite-function 
-      '(lambda (key fmt)
-	 (let ((cite (replace-regexp-in-string "%l" key fmt)))
-	   (if (or (= ?~ (string-to-char fmt))
-		   (member (preceding-char) '(?\ ?\t ?\n ?~)))
-	       cite
-	     (concat "~" cite))))
+      #'(lambda (key fmt)
+	  (let ((cite (replace-regexp-in-string "%l" key fmt)))
+	    (if (or (= ?~ (string-to-char fmt))
+		    (member (preceding-char) '(?\ ?\t ?\n ?~)))
+		cite
+	      (concat "~" cite))))
       TeX-auto-save                        t
       TeX-parse-self                       t
       reftex-plug-into-AUCTeX              t
@@ -46,24 +46,24 @@
 
 (setq-default TeX-master nil)
 ;; minor modes for LaTex
-(add-hook 'LaTeX-mode-hook '(lambda () 
-			      (progn
-				(turn-on-reftex)
-				(setq TeX-PDF-mode t)
-				(LaTeX-math-mode  1)
-				(flyspell-mode    1)
-				(auto-fill-mode   1)
-				(setq fill-column 95)
-				(define-key LaTeX-mode-map (kbd "C-#") 'jb/wc-latex)
-				(outline-minor-mode t)
-				(setq latex-mode-map LaTeX-mode-map)
-				(add-to-list 'TeX-command-list 
-					     '("images" "utils.py svg2pdf"
-					       TeX-run-command nil t))
-				(add-to-list 'TeX-command-list 
-					     '("make" "latexmk -pdf %s"
-					       TeX-run-TeX nil t
-					       :help "Run Latexmk on file")))))
+(add-hook 'LaTeX-mode-hook #'(lambda () 
+			       (progn
+				 (turn-on-reftex)
+				 (setq TeX-PDF-mode t)
+				 (LaTeX-math-mode  1)
+				 (flyspell-mode    1)
+				 (auto-fill-mode   1)
+				 (setq fill-column 95)
+				 (define-key LaTeX-mode-map (kbd "C-#") 'jb/wc-latex)
+				 (outline-minor-mode t)
+				 (setq latex-mode-map LaTeX-mode-map)
+				 (add-to-list 'TeX-command-list
+					      '("images" "utils.py svg2pdf"
+						TeX-run-command nil t))
+				 (add-to-list 'TeX-command-list
+					      '("make" "latexmk -pdf %s"
+						TeX-run-TeX nil t
+						:help "Run Latexmk on file")))))
 
 ;; Use pdf-tools to open PDF files
 (setq TeX-view-program-selection '((output-pdf "PDF Tools"))

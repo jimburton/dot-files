@@ -1,4 +1,4 @@
-;;; package --- Little helper functions.
+;;; package --- Little helper functions.  -*- lexical-binding: t; -*-
 ;;;
 ;;; Commentary:
 ;;;
